@@ -23,7 +23,7 @@ You can contribute in many ways:
 2. **Clone** your fork locally:
 
    ```bash
-   git clone https://github.com/ikamalagrahari/DineFlow-App.git
+   git clone https://github.com/<your-username>/DineFlow-App.git
    cd DineFlow-App
    ```
 3. **Set up the project**:
