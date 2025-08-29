@@ -1,0 +1,92 @@
+# =================================================
+# General / Global
+# Files that can appear in any project type.
+# =================================================
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+*.pem
+
+# IDE-specific
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# The .vscode folder contains launch configurations and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Environment variables - should not be in version control
+.env*
+
+# =================================================
+# Flutter / Dart (dineflow_erp/)
+# Specific to the Flutter client application.
+# =================================================
+
+# General
+/dineflow_erp/build/
+/dineflow_erp/.dart_tool/
+/dineflow_erp/.flutter-plugins
+/dineflow_erp/.flutter-plugins-dependencies
+/dineflow_erp/.pub-cache/
+/dineflow_erp/.pub/
+
+# iOS
+/dineflow_erp/ios/Flutter/.last_build_id
+
+# Android
+/dineflow_erp/android/app/debug
+/dineflow_erp/android/app/profile
+/dineflow_erp/android/app/release
+
+# Symbolication & Obfuscation
+/dineflow_erp/app.*.symbols
+/dineflow_erp/app.*.map.json
+
+
+# =================================================
+# Next.js / Node.js (nextjs_api/)
+# Specific to the Next.js API server.
+# =================================================
+
+# Dependencies
+/nextjs_api/node_modules
+/nextjs_api/.pnp
+/nextjs_api/.pnp.*
+/nextjs_api/.yarn/*
+!/nextjs_api/.yarn/patches
+!/nextjs_api/.yarn/plugins
+!/nextjs_api/.yarn/releases
+!/nextjs_api/.yarn/versions
+
+# Testing
+/nextjs_api/coverage
+
+# Next.js build artifacts
+/nextjs_api/.next/
+/nextjs_api/out/
+
+# TypeScript
+/nextjs_api/*.tsbuildinfo
+/nextjs_api/next-env.d.ts
+
+# Debug logs
+/nextjs_api/npm-debug.log*
+/nextjs_api/yarn-debug.log*
+/nextjs_api/yarn-error.log*
+/nextjs_api/.pnpm-debug.log*
+
+# Vercel
+/nextjs_api/.vercel
