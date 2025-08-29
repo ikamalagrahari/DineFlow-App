@@ -53,7 +53,7 @@ We welcome contributions from developers of all skill levels! Whether you're jus
 2. **Clone your forked repo:**
 
    ```bash
-   git clone https://github.com/ikamalagrahari/DineFlow-App.git
+   git clone https://github.com/<your-username>/DineFlow-App.git
    cd DineFlow-App
    ```
 3. **Install dependencies:**
