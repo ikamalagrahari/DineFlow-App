@@ -1,6 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import 'config/auth_config.dart';
+import 'providers/auth_provider.dart';
+import 'services/auth_service.dart';
+import 'screens/welcome_screen.dart';
+import 'screens/home_screen.dart';
 
 // This is an example of a Flutter app that fetches data from an API.
 
@@ -58,18 +65,210 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter API Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    // Show configuration error if Auth0 is not properly configured
+    if (!AuthConfig.isConfigured) {
+      return MaterialApp(
+        title: 'DineFlow Configuration Error',
+        home: ConfigurationErrorScreen(),
+      );
+    }
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(
+            authService: AuthService(
+              domain: AuthConfig.domain,
+              clientId: AuthConfig.clientId,
+            ),
+          ),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'DineFlow',
+        theme: ThemeData(
+          primarySwatch: Colors.deepOrange,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          fontFamily: 'Roboto',
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          cardTheme: CardTheme(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+        home: const AuthWrapper(),
+        debugShowCheckedModeBanner: false,
       ),
-      home: const PostsPage(),
     );
   }
 }
 
-// --- 3. UI to Display the Data ---
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        // Show loading screen during auth initialization
+        if (authProvider.isLoading && !authProvider.isAuthenticated) {
+          return const LoadingScreen();
+        }
+        
+        // Show home screen if authenticated
+        if (authProvider.isAuthenticated) {
+          return const HomeScreen();
+        }
+        
+        // Show welcome screen if not authenticated
+        return const WelcomeScreen();
+      },
+    );
+  }
+}
+
+class LoadingScreen extends StatelessWidget {
+  const LoadingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.orange.shade400,
+              Colors.deepOrange.shade600,
+            ],
+          ),
+        ),
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // App Logo
+              Icon(
+                Icons.restaurant_menu,
+                size: 80,
+                color: Colors.white,
+              ),
+              SizedBox(height: 24),
+              Text(
+                'DineFlow',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              SizedBox(height: 40),
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Loading...',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white70,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ConfigurationErrorScreen extends StatelessWidget {
+  const ConfigurationErrorScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Configuration Error'),
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              size: 80,
+              color: Colors.red,
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'Auth0 Configuration Required',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              AuthConfig.configurationError,
+              style: const TextStyle(
+                fontSize: 16,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Setup Instructions:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      '1. Create an Auth0 application\n'
+                      '2. Copy your domain and client ID\n'
+                      '3. Update lib/config/auth_config.dart\n'
+                      '4. Configure callback URLs\n'
+                      '5. Restart the application',
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// --- 3. UI to Display the Data (Legacy - keeping for reference) ---
 class PostsPage extends StatefulWidget {
   const PostsPage({super.key});
 
