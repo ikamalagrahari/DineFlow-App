@@ -30,6 +30,10 @@ migrate_working_dir/
 # Environment variables - should not be in version control
 .env*
 
+# Auth0 configuration with real credentials (if you create a local config)
+# Note: The template auth_config.dart should remain in version control
+# dineflow_erp/lib/config/auth_config.local.dart
+
 # =================================================
 # Flutter / Dart (dineflow_erp/)
 # Specific to the Flutter client application.
